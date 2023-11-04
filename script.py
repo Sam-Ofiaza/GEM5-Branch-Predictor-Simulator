@@ -77,14 +77,28 @@ def change_tourny_bp_config(data, btb_entries=None, local_pred_size=None, global
     print(f'{btb_entries=} {local_pred_size=} {global_pred_size=} {choice_pred_size=}')
 
 
-def run_scripts(pool, output_dir_name):
+def run_script_serial(output_dir_name):
+    subprocess.call(['./script.sh', output_dir_name, '&>>',
+                    f'{LOGS_DIR}/{output_dir_name}.log'])
+
+
+def run_scripts_parallel(pool, output_dir_name):
     subprocess.call(['./script1.sh', output_dir_name, '&>>',
                     f'{LOGS_DIR}/{output_dir_name}.1.log'])
     pool.apply_async(subprocess.Popen, args=(
         ['./script2.sh', output_dir_name, '&>>', f'{LOGS_DIR}/{output_dir_name}.2.log'], ))
 
 
-def test():
+def test_serial():
+    modify_file(BP_TYPE_PATH, partial(
+        change_bp_type, name='LocalBP()'))
+    modify_file(BP_PARAMS_PATH, partial(
+        change_local_bp_config, btb_entries=2048, local_pred_size=1024))
+    output_dir_name = f'Local_{OUTPUT_DIR_NAME_MAP[2048]}_BTB_Entries_{OUTPUT_DIR_NAME_MAP[1024]}_Pred'
+    run_script_serial(output_dir_name)
+
+
+def test_parallel():
     pool = mp.Pool()
 
     modify_file(BP_TYPE_PATH, partial(
@@ -98,7 +112,37 @@ def test():
     pool.join()
 
 
-def main():
+def main_serial():
+    for x in BTB_ENTRIES:
+        for y in LOCAL_PRED_SIZES:
+            modify_file(BP_TYPE_PATH, partial(
+                change_bp_type, name='LocalBP()'))
+            modify_file(BP_PARAMS_PATH, partial(
+                change_local_bp_config, btb_entries=x, local_pred_size=y))
+            output_dir_name = f'Local_{OUTPUT_DIR_NAME_MAP[x]}_BTB_{OUTPUT_DIR_NAME_MAP[y]}_Pred'
+            run_script_serial(output_dir_name)
+
+        for y in BIMODE_GLOBAL_PRED_SIZES:
+            for z in BIMODE_CHOICE_PREDICTOR_SIZES:
+                modify_file(BP_TYPE_PATH, partial(
+                    change_bp_type, name='BiModeBP()'))
+                modify_file(BP_PARAMS_PATH, partial(
+                    change_bimode_bp_config, btb_entries=x, global_pred_size=y, choice_pred_size=z))
+                output_dir_name = f'BiMode_{OUTPUT_DIR_NAME_MAP[x]}_BTB_{OUTPUT_DIR_NAME_MAP[y]}_Global_{OUTPUT_DIR_NAME_MAP[z]}_Choice'
+                run_script_serial(output_dir_name)
+
+        for y in TOURNY_LOCAL_PRED_SIZES:
+            for z in TOURNY_GLOBAL_PRED_SIZES:
+                for k in TOURNEY_CHOICE_PRED_SIZES:
+                    modify_file(BP_TYPE_PATH, partial(
+                        change_bp_type, name='TournamentBP()'))
+                    modify_file(BP_PARAMS_PATH, partial(
+                        change_tourny_bp_config, btb_entries=x, local_pred_size=y, global_pred_size=z, choice_pred_size=k))
+                    output_dir_name = f'Tournament_{OUTPUT_DIR_NAME_MAP[x]}_BTB_{OUTPUT_DIR_NAME_MAP[y]}_Local_{OUTPUT_DIR_NAME_MAP[z]}_Global_{OUTPUT_DIR_NAME_MAP[k]}_Choice'
+                    run_script_serial(output_dir_name)
+
+
+def main_parallel():
     pool = mp.Pool()
 
     for x in BTB_ENTRIES:
@@ -133,7 +177,15 @@ def main():
     pool.join()
 
 
-if len(sys.argv) > 1:
-    test()  # Enter any arguments to run a single test for Local_2k_BTB_Entries_1k_Pred_Size
-else:
-    main()  # Enter no arguments to run all tests
+match(sys.argv[1]):
+    case 'test-serial':
+        test_serial()
+    case 'test-parallel':
+        test_parallel()
+    case 'main-serial':
+        main_serial()
+    case 'main-parallel':
+        main_parallel()
+    case _:
+        sys.exit(
+            'Please enter one of the following arguments: test-serial test-parallel main-serial main-parallel')
