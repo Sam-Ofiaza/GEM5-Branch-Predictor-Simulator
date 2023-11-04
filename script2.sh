@@ -2,8 +2,8 @@
 
 OUTPUT_DIR_NAME=$1
 GEM5_DIR=./gem5
-OUTPUT_PATH=./output
 BUILD_PATH=./builds
+OUTPUT_PATH=./output
 HMMER_BENCHMARK_PATH=./Project1_SPEC/"456.hmmer"/src/benchmark
 HMMER_ARG_PATH=./Project1_SPEC/"456.hmmer"/data/bombesin.hmm
 SJENG_BENCHMARK_PATH=./Project1_SPEC/"458.sjeng"/src/benchmark
@@ -12,7 +12,9 @@ BENCHMARK_ARGS="-I 5000000 --cpu-type=timing --caches --l2cache --l1d_size=128kB
 
 start_time=`date +%s`
 
-mkdir -p $BUILD_PATH/$OUTPUT_DIR_NAME && cp -rf gem5 $BUILD_PATH/$OUTPUT_DIR_NAME
+mkdir -p $BUILD_PATH/$OUTPUT_DIR_NAME
+wait
+cp -rf $GEM5_DIR $BUILD_PATH/$OUTPUT_DIR_NAME
 wait
 mkdir -p $OUTPUT_PATH/$OUTPUT_DIR_NAME/hmmer $OUTPUT_PATH/$OUTPUT_DIR_NAME/sjeng
 wait

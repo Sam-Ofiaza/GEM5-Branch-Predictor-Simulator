@@ -83,8 +83,10 @@ def test():
     modify_file(BP_PARAMS_PATH, partial(
         change_local_bp_config, btb_entries=2048, local_pred_size=1024))
     output_dir_name = f'Local_{OUTPUT_DIR_NAME_MAP[2048]}_BTB_Entries_{OUTPUT_DIR_NAME_MAP[1024]}_Pred_Size'
-    subprocess.Popen(['./script.sh', output_dir_name,
-                      '&>>', f'{LOGS_DIR}/{output_dir_name}.log'])
+    subprocess.call(['./script1.sh', output_dir_name,
+                     '&>>', f'{LOGS_DIR}/{output_dir_name}.1.log'])
+    subprocess.call(['./script2.sh', output_dir_name,
+                     '&>>', f'{LOGS_DIR}/{output_dir_name}.2.log'])
 
 
 def main():
@@ -97,9 +99,10 @@ def main():
             modify_file(BP_PARAMS_PATH, partial(
                 change_local_bp_config, btb_entries=x, local_pred_size=y))
             output_dir_name = f'Local_{OUTPUT_DIR_NAME_MAP[x]}_BTB_Entries_{OUTPUT_DIR_NAME_MAP[y]}_Pred_Size'
-            # subprocess.Popen(['./script.sh', output_dir_name, '&>>', f'{LOGS_DIR}/{output_dir_name}.log'])
+            subprocess.call(['./script1.sh', output_dir_name,
+                            '&>>', f'{LOGS_DIR}/{output_dir_name}.1.log'])
             pool.apply_async(subprocess.Popen, args=(
-                ['./script.sh', output_dir_name, '&>>', f'{LOGS_DIR}/{output_dir_name}.log'], ))
+                ['./script2.sh', output_dir_name, '&>>', f'{LOGS_DIR}/{output_dir_name}.2.log'], ))
 
         for y in BIMODE_GLOBAL_PRED_SIZES:
             for z in BIMODE_CHOICE_PREDICTOR_SIZES:
@@ -108,9 +111,10 @@ def main():
                 modify_file(BP_PARAMS_PATH, partial(
                     change_bimode_bp_config, btb_entries=x, global_pred_size=y, choice_pred_size=z))
                 output_dir_name = f'BiMode_{OUTPUT_DIR_NAME_MAP[x]}_BTB_Entries_{OUTPUT_DIR_NAME_MAP[y]}_Global_Pred_Size_{OUTPUT_DIR_NAME_MAP[z]}_Choice_Pred_Size'
-                # subprocess.Popen(['./script.sh', output_dir_name, '&>>', f'{LOGS_DIR}/{output_dir_name}.log'])
+                subprocess.call(['./script1.sh', output_dir_name,
+                                 '&>>', f'{LOGS_DIR}/{output_dir_name}.1.log'])
                 pool.apply_async(subprocess.Popen, args=(
-                    ['./script.sh', output_dir_name, '&>>', f'{LOGS_DIR}/{output_dir_name}.log'], ))
+                    ['./script2.sh', output_dir_name, '&>>', f'{LOGS_DIR}/{output_dir_name}.2.log'], ))
 
         for y in TOURNY_LOCAL_PRED_SIZES:
             for z in TOURNY_GLOBAL_PRED_SIZES:
@@ -120,9 +124,10 @@ def main():
                     modify_file(BP_PARAMS_PATH, partial(
                         change_tourny_bp_config, btb_entries=x, local_pred_size=y, global_pred_size=z, choice_pred_size=k))
                     output_dir_name = f'Tournament_{OUTPUT_DIR_NAME_MAP[x]}_BTB_Entries_{OUTPUT_DIR_NAME_MAP[y]}_Local_Pred_Size_{OUTPUT_DIR_NAME_MAP[z]}_Global_Pred_Size_{OUTPUT_DIR_NAME_MAP[k]}_Choice_Pred_Size'
-                    # subprocess.Popen(['./script.sh', output_dir_name, '&>>', f'{LOGS_DIR}/{output_dir_name}.log'])
+                    subprocess.call(['./script1.sh', output_dir_name,
+                                     '&>>', f'{LOGS_DIR}/{output_dir_name}.1.log'])
                     pool.apply_async(subprocess.Popen, args=(
-                        ['./script.sh', output_dir_name, '&>>', f'{LOGS_DIR}/{output_dir_name}.log'], ))
+                        ['./script2.sh', output_dir_name, '&>>', f'{LOGS_DIR}/{output_dir_name}.2.log'], ))
 
     pool.close()
     pool.join()
