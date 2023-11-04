@@ -22,8 +22,7 @@ scons build/X86/gem5.opt -j $2 &>> ../$OUTPUT_PATH/$OUTPUT_DIR_NAME/build.log
 wait
 cd ..
 wait
-$BUILD_DIR/$OUTPUT_DIR_NAME/gem5/build/X86/gem5.opt -d $OUTPUT_PATH/$OUTPUT_DIR_NAME/hmmer $BUILD_DIR/$OUTPUT_DIR_NAME/gem5/configs/example/se.py -c $HMMER_BENCHMARK_PATH -o $HMMER_ARG_PATH $BENCHMARK_ARGS &>> $OUTPUT_PATH/$OUTPUT_DIR_NAME/hmmer.log
-wait
-$BUILD_DIR/$OUTPUT_DIR_NAME/gem5/build/X86/gem5.opt -d $OUTPUT_PATH/$OUTPUT_DIR_NAME/sjeng $BUILD_DIR/$OUTPUT_DIR_NAME/gem5/configs/example/se.py -c $SJENG_BENCHMARK_PATH -o $SJENG_ARG_PATH $BENCHMARK_ARGS &>> $OUTPUT_PATH/$OUTPUT_DIR_NAME/sjeng.log
+$GEM5_DIR/build/X86/gem5.opt -d $OUTPUT_PATH/$OUTPUT_DIR_NAME/hmmer $GEM5_DIR/configs/example/se.py -c $HMMER_BENCHMARK_PATH -o $HMMER_ARG_PATH $BENCHMARK_ARGS &>> $OUTPUT_PATH/$OUTPUT_DIR_NAME/hmmer.log
+$GEM5_DIR/build/X86/gem5.opt -d $OUTPUT_PATH/$OUTPUT_DIR_NAME/sjeng $GEM5_DIR/configs/example/se.py -c $SJENG_BENCHMARK_PATH -o $SJENG_ARG_PATH $BENCHMARK_ARGS &>> $OUTPUT_PATH/$OUTPUT_DIR_NAME/sjeng.log
 
 echo $(expr `date +%s` - $start_time) s
