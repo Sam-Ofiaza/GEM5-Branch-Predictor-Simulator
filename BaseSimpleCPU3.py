@@ -38,4 +38,4 @@ class BaseSimpleCPU(BaseCPU):
     cxx_header = "cpu/simple/base.hh"
     cxx_class = "gem5::BaseSimpleCPU"
 
-    branchPred = Param.BranchPredictor(LocalBP(), "Branch Predictor")
+    branchPred = Param.BranchPredictor(TournamentBP(), "Branch Predictor")

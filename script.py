@@ -53,20 +53,20 @@ def modify_file(filepath, callback):
 
 def change_bp_type(data, name=None):
     data[40] = BP_TYPES[40](name)
-    # print(name, end=' ')
+    print(name, end=' ')
 
 
 def change_local_bp_config(data, btb_entries=None, local_pred_size=None):
     data[65] = BP_PARAMS[65](btb_entries)
     data[81] = BP_PARAMS[81](local_pred_size)
-    # print(f'{btb_entries=} {local_pred_size=}')
+    print(f'{btb_entries=} {local_pred_size=}')
 
 
 def change_bimode_bp_config(data, btb_entries=None, global_pred_size=None, choice_pred_size=None):
     data[65] = BP_PARAMS[65](btb_entries)
     data[104] = BP_PARAMS[104](global_pred_size)
     data[106] = BP_PARAMS[106](choice_pred_size)
-    # print(f'{btb_entries=} {global_pred_size=} {choice_pred_size=}')
+    print(f'{btb_entries=} {global_pred_size=} {choice_pred_size=}')
 
 
 def change_tourny_bp_config(data, btb_entries=None, local_pred_size=None, global_pred_size=None, choice_pred_size=None):
@@ -74,7 +74,7 @@ def change_tourny_bp_config(data, btb_entries=None, local_pred_size=None, global
     data[90] = BP_PARAMS[90](local_pred_size)
     data[93] = BP_PARAMS[93](global_pred_size)
     data[95] = BP_PARAMS[95](choice_pred_size)
-    # print(f'{btb_entries=} {local_pred_size=} {global_pred_size=} {choice_pred_size=}')
+    print(f'{btb_entries=} {local_pred_size=} {global_pred_size=} {choice_pred_size=}')
 
 
 def test():

@@ -1,0 +1,38 @@
+LocalBP() btb_entries=2048 local_pred_size=1024
+LocalBP() btb_entries=2048 local_pred_size=2048
+BiModeBP() btb_entries=2048 global_pred_size=2048 choice_pred_size=2048
+BiModeBP() btb_entries=2048 global_pred_size=2048 choice_pred_size=4096
+BiModeBP() btb_entries=2048 global_pred_size=2048 choice_pred_size=8192
+BiModeBP() btb_entries=2048 global_pred_size=4096 choice_pred_size=2048
+BiModeBP() btb_entries=2048 global_pred_size=4096 choice_pred_size=4096
+BiModeBP() btb_entries=2048 global_pred_size=4096 choice_pred_size=8192
+BiModeBP() btb_entries=2048 global_pred_size=8192 choice_pred_size=2048
+BiModeBP() btb_entries=2048 global_pred_size=8192 choice_pred_size=4096
+BiModeBP() btb_entries=2048 global_pred_size=8192 choice_pred_size=8192
+TournamentBP() btb_entries=2048 local_pred_size=1024 global_pred_size=4096 choice_pred_size=4096
+TournamentBP() btb_entries=2048 local_pred_size=1024 global_pred_size=4096 choice_pred_size=8192
+TournamentBP() btb_entries=2048 local_pred_size=1024 global_pred_size=8192 choice_pred_size=4096
+TournamentBP() btb_entries=2048 local_pred_size=1024 global_pred_size=8192 choice_pred_size=8192
+TournamentBP() btb_entries=2048 local_pred_size=2048 global_pred_size=4096 choice_pred_size=4096
+TournamentBP() btb_entries=2048 local_pred_size=2048 global_pred_size=4096 choice_pred_size=8192
+TournamentBP() btb_entries=2048 local_pred_size=2048 global_pred_size=8192 choice_pred_size=4096
+TournamentBP() btb_entries=2048 local_pred_size=2048 global_pred_size=8192 choice_pred_size=8192
+LocalBP() btb_entries=4096 local_pred_size=1024
+LocalBP() btb_entries=4096 local_pred_size=2048
+BiModeBP() btb_entries=4096 global_pred_size=2048 choice_pred_size=2048
+BiModeBP() btb_entries=4096 global_pred_size=2048 choice_pred_size=4096
+BiModeBP() btb_entries=4096 global_pred_size=2048 choice_pred_size=8192
+BiModeBP() btb_entries=4096 global_pred_size=4096 choice_pred_size=2048
+BiModeBP() btb_entries=4096 global_pred_size=4096 choice_pred_size=4096
+BiModeBP() btb_entries=4096 global_pred_size=4096 choice_pred_size=8192
+BiModeBP() btb_entries=4096 global_pred_size=8192 choice_pred_size=2048
+BiModeBP() btb_entries=4096 global_pred_size=8192 choice_pred_size=4096
+BiModeBP() btb_entries=4096 global_pred_size=8192 choice_pred_size=8192
+TournamentBP() btb_entries=4096 local_pred_size=1024 global_pred_size=4096 choice_pred_size=4096
+TournamentBP() btb_entries=4096 local_pred_size=1024 global_pred_size=4096 choice_pred_size=8192
+TournamentBP() btb_entries=4096 local_pred_size=1024 global_pred_size=8192 choice_pred_size=4096
+TournamentBP() btb_entries=4096 local_pred_size=1024 global_pred_size=8192 choice_pred_size=8192
+TournamentBP() btb_entries=4096 local_pred_size=2048 global_pred_size=4096 choice_pred_size=4096
+TournamentBP() btb_entries=4096 local_pred_size=2048 global_pred_size=4096 choice_pred_size=8192
+TournamentBP() btb_entries=4096 local_pred_size=2048 global_pred_size=8192 choice_pred_size=4096
+TournamentBP() btb_entries=4096 local_pred_size=2048 global_pred_size=8192 choice_pred_size=8192
