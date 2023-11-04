@@ -85,15 +85,17 @@ def run_scripts(pool, output_dir_name):
 
 
 def test():
+    pool = mp.Pool()
+
     modify_file(BP_TYPE_PATH, partial(
         change_bp_type, name='LocalBP()'))
     modify_file(BP_PARAMS_PATH, partial(
         change_local_bp_config, btb_entries=2048, local_pred_size=1024))
     output_dir_name = f'Local_{OUTPUT_DIR_NAME_MAP[2048]}_BTB_Entries_{OUTPUT_DIR_NAME_MAP[1024]}_Pred'
-    subprocess.call(['./script1.sh', output_dir_name,
-                     '&>>', f'{LOGS_DIR}/{output_dir_name}.1.log'])
-    subprocess.call(['./script2.sh', output_dir_name,
-                     '&>>', f'{LOGS_DIR}/{output_dir_name}.2.log'])
+    run_scripts(pool, output_dir_name)
+
+    pool.close()
+    pool.join()
 
 
 def main():
