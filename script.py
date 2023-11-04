@@ -78,7 +78,7 @@ def change_tourny_bp_config(data, btb_entries=None, local_pred_size=None, global
 
 
 def run_script_serial(output_dir_name):
-    subprocess.call(['./script.sh', output_dir_name, '&>>',
+    subprocess.call(['./script.sh', output_dir_name, sys.argv[2], '&>>',
                     f'{LOGS_DIR}/{output_dir_name}.log'])
 
 
@@ -106,7 +106,7 @@ def test_parallel():
     modify_file(BP_PARAMS_PATH, partial(
         change_local_bp_config, btb_entries=2048, local_pred_size=1024))
     output_dir_name = f'Local_{OUTPUT_DIR_NAME_MAP[2048]}_BTB_Entries_{OUTPUT_DIR_NAME_MAP[1024]}_Pred'
-    run_scripts(pool, output_dir_name)
+    run_scripts_parallel(pool, output_dir_name)
 
     pool.close()
     pool.join()
@@ -152,7 +152,7 @@ def main_parallel():
             modify_file(BP_PARAMS_PATH, partial(
                 change_local_bp_config, btb_entries=x, local_pred_size=y))
             output_dir_name = f'Local_{OUTPUT_DIR_NAME_MAP[x]}_BTB_{OUTPUT_DIR_NAME_MAP[y]}_Pred'
-            run_scripts(pool, output_dir_name)
+            run_scripts_parallel(pool, output_dir_name)
 
         for y in BIMODE_GLOBAL_PRED_SIZES:
             for z in BIMODE_CHOICE_PREDICTOR_SIZES:
@@ -161,7 +161,7 @@ def main_parallel():
                 modify_file(BP_PARAMS_PATH, partial(
                     change_bimode_bp_config, btb_entries=x, global_pred_size=y, choice_pred_size=z))
                 output_dir_name = f'BiMode_{OUTPUT_DIR_NAME_MAP[x]}_BTB_{OUTPUT_DIR_NAME_MAP[y]}_Global_{OUTPUT_DIR_NAME_MAP[z]}_Choice'
-                run_scripts(pool, output_dir_name)
+                run_scripts_parallel(pool, output_dir_name)
 
         for y in TOURNY_LOCAL_PRED_SIZES:
             for z in TOURNY_GLOBAL_PRED_SIZES:
@@ -171,7 +171,7 @@ def main_parallel():
                     modify_file(BP_PARAMS_PATH, partial(
                         change_tourny_bp_config, btb_entries=x, local_pred_size=y, global_pred_size=z, choice_pred_size=k))
                     output_dir_name = f'Tournament_{OUTPUT_DIR_NAME_MAP[x]}_BTB_{OUTPUT_DIR_NAME_MAP[y]}_Local_{OUTPUT_DIR_NAME_MAP[z]}_Global_{OUTPUT_DIR_NAME_MAP[k]}_Choice'
-                    run_scripts(pool, output_dir_name)
+                    run_scripts_parallel(pool, output_dir_name)
 
     pool.close()
     pool.join()

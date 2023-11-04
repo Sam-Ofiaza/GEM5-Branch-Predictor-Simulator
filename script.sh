@@ -18,7 +18,7 @@ cd $GEM5_DIR
 wait
 rm -rf build/X86
 wait 
-scons build/X86/gem5.opt -j 32 &>> ../$OUTPUT_PATH/$OUTPUT_DIR_NAME/build.log
+scons build/X86/gem5.opt -j $2 &>> ../$OUTPUT_PATH/$OUTPUT_DIR_NAME/build.log
 wait
 cd ..
 wait
