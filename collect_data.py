@@ -23,8 +23,12 @@ def get_stats(benchmark, stats_path):
     with open(stats_path, 'r', encoding='utf-8') as file:
         file_data = file.readlines()
         btb_miss_pct = float(file_data[26].split()[1]) - 99
-        branch_mispred_pct = float(
-            file_data[290 if benchmark == 'hmmer' else 273].split()[1]) / 100
+        num_pred_branches = float(
+            file_data[288 if benchmark == 'hmmer' else 271].split()[1])
+        num_mispred_branches = float(
+            file_data[289 if benchmark == 'hmmer' else 272].split()[1])
+        branch_mispred_pct = num_mispred_branches / \
+            (num_pred_branches + num_mispred_branches)
         return (btb_miss_pct, branch_mispred_pct)
 
 
