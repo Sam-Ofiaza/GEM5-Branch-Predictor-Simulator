@@ -45,8 +45,8 @@ def get_bimode_data(data, benchmark, x):
         for z in BIMODE_CHOICE_PREDICTOR_SIZES:
             stats_path = f'./output/BiMode_{x}_BTB_{y}_Global_{z}_Choice/{benchmark}/stats.txt'
             stats_data = get_stats(benchmark, stats_path)
-            data.append([benchmark, 'BiMode', REVERSE_OUTPUT_DIR_NAME_MAP[x], REVERSE_OUTPUT_DIR_NAME_MAP[y],
-                        REVERSE_OUTPUT_DIR_NAME_MAP[z], None, stats_data[0], stats_data[1]])
+            data.append([benchmark, 'BiMode', None, REVERSE_OUTPUT_DIR_NAME_MAP[x], REVERSE_OUTPUT_DIR_NAME_MAP[y],
+                        REVERSE_OUTPUT_DIR_NAME_MAP[z], stats_data[0], stats_data[1]])
 
 
 def get_tournament_data(data, benchmark, x):
