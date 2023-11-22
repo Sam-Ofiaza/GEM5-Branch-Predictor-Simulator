@@ -130,7 +130,7 @@ class SimpleExecContext : public ExecContext
             idleFraction = statistics::constant(1.0) - notIdleFraction;
             numIdleCycles = idleFraction * cpu->baseStats.numCycles;
             numBusyCycles = notIdleFraction * cpu->baseStats.numCycles;
-	    branchMispredPct = (numBranchMispred / numPredictedBranches) * 100;
+	    branchMispredPct = numBranchMispred / numPredictedBranches;
 
             numPredictedBranches
                 .prereq(numPredictedBranches);

@@ -1,4 +1,5 @@
 import pandas as pd
+import sys
 
 REVERSE_OUTPUT_DIR_NAME_MAP = {'1k': 1024, '2k': 2048, '4k': 4096, '8k': 8192}
 
@@ -34,7 +35,7 @@ def get_stats(benchmark, stats_path):
 
 def get_local_data(data, benchmark, x):
     for y in LOCAL_PRED_SIZES:
-        stats_path = f'./output/Local_{x}_BTB_{y}_Pred/{benchmark}/stats.txt'
+        stats_path = f'{OUTPUT_DIR}/Local_{x}_BTB_{y}_Pred/{benchmark}/stats.txt'
         stats_data = get_stats(benchmark, stats_path)
         data.append([benchmark, 'Local', REVERSE_OUTPUT_DIR_NAME_MAP[x],
                     REVERSE_OUTPUT_DIR_NAME_MAP[y], None, None, stats_data[0], stats_data[1]])
@@ -43,7 +44,7 @@ def get_local_data(data, benchmark, x):
 def get_bimode_data(data, benchmark, x):
     for y in BIMODE_GLOBAL_PRED_SIZES:
         for z in BIMODE_CHOICE_PREDICTOR_SIZES:
-            stats_path = f'./output/BiMode_{x}_BTB_{y}_Global_{z}_Choice/{benchmark}/stats.txt'
+            stats_path = f'{OUTPUT_DIR}/BiMode_{x}_BTB_{y}_Global_{z}_Choice/{benchmark}/stats.txt'
             stats_data = get_stats(benchmark, stats_path)
             data.append([benchmark, 'BiMode', None, REVERSE_OUTPUT_DIR_NAME_MAP[x], REVERSE_OUTPUT_DIR_NAME_MAP[y],
                         REVERSE_OUTPUT_DIR_NAME_MAP[z], stats_data[0], stats_data[1]])
@@ -53,11 +54,25 @@ def get_tournament_data(data, benchmark, x):
     for y in TOURNY_LOCAL_PRED_SIZES:
         for z in TOURNY_GLOBAL_PRED_SIZES:
             for k in TOURNEY_CHOICE_PRED_SIZES:
-                stats_path = f'./output/Tournament_{x}_BTB_{y}_Local_{z}_Global_{z}_Choice/{benchmark}/stats.txt'
+                stats_path = f'{OUTPUT_DIR}/Tournament_{x}_BTB_{y}_Local_{z}_Global_{z}_Choice/{benchmark}/stats.txt'
                 stats_data = get_stats(benchmark, stats_path)
                 data.append([benchmark, 'Tournament', REVERSE_OUTPUT_DIR_NAME_MAP[x], REVERSE_OUTPUT_DIR_NAME_MAP[y],
                             REVERSE_OUTPUT_DIR_NAME_MAP[z], REVERSE_OUTPUT_DIR_NAME_MAP[k], stats_data[0], stats_data[1]])
 
+
+OUTPUT_DIR = ''
+OUTPUT_FILE = ''
+
+match(sys.argv[1]):
+    case 'serial':
+        OUTPUT_DIR = '../output-serial'
+        OUTPUT_FILE = 'complete-serial-data.xlsx'
+    case 'parallel':
+        OUTPUT_DIR = '../output-parallel'
+        OUTPUT_FILE = 'complete-parallel-data.xlsx'
+    case _:
+        sys.exit(
+            'Please enter one of the following arguments: serial parallel')
 
 data = []
 
@@ -75,4 +90,4 @@ for benchmark in ['hmmer', 'sjeng']:
 df = pd.DataFrame(data, columns=['Benchmark', 'Branch Predictor', 'BTB Entries', 'Local Predictor Size',
                   'Global Predictor Size', 'Choice Predictor Size', 'BTB Miss %', 'Branch Misprediction %'])
 
-df.to_excel('output.xlsx')
+df.to_excel(OUTPUT_FILE)

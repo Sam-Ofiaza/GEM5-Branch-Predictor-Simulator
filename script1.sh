@@ -1,9 +1,0 @@
-#!/bin/sh
-
-OUTPUT_DIR_NAME=$1
-GEM5_DIR=./gem5
-BUILD_PATH=./builds
-
-mkdir -p $BUILD_PATH/$OUTPUT_DIR_NAME
-wait
-cp -rf gem5 $BUILD_PATH/$OUTPUT_DIR_NAME

@@ -1,13 +1,12 @@
 from functools import partial
 import subprocess
-import os
 import sys
 import multiprocessing as mp
 
-GEM5_DIR = './gem5'
+GEM5_DIR = '../../../gem5'
 BP_TYPE_PATH = f'{GEM5_DIR}/src/cpu/simple/BaseSimpleCPU.py'
 BP_PARAMS_PATH = f'{GEM5_DIR}/src/cpu/pred/BranchPredictor.py'
-LOGS_DIR = './logs'
+LOGS_DIR = '../logs'
 
 OUTPUT_DIR_NAME_MAP = {1024: '1k', 2048: '2k', 4096: '4k', 8192: '8k'}
 
@@ -42,6 +41,7 @@ BP_PARAMS = {
 
 
 def modify_file(filepath, callback):
+    '''Locates file with filepath and executes a callback function on it'''
     with open(filepath, 'r', encoding='utf-8') as file:
         data = file.readlines()
 
@@ -52,6 +52,7 @@ def modify_file(filepath, callback):
 
 
 def change_bp_type(data, name=None):
+    '''Used as a callback to a modify_file call'''
     data[40] = BP_TYPES[40](name)
     print(name, end=' ')
 
@@ -78,18 +79,23 @@ def change_tourny_bp_config(data, btb_entries=None, local_pred_size=None, global
 
 
 def run_script_serial(output_dir_name):
-    subprocess.call(['./script.sh', output_dir_name, sys.argv[2], '&>>',
+    '''Compiles one GEM5 configuration, test with the benchmarks, and moves the output to an output/output_dir_name folder'''
+    subprocess.call(['./serial_helper.sh', output_dir_name, sys.argv[2], '&>>',
                     f'{LOGS_DIR}/{output_dir_name}.log'])
 
 
 def run_scripts_parallel(pool, output_dir_name):
-    subprocess.call(['./script1.sh', output_dir_name, '&>>',
+    '''Two helper scripts are needed: the first ensures that modifying the GEM5 source dode and copying the GEM5 source code into a separate folder happen separately, the second is run asynchronously in a pool of threads managed by Python'''
+    # Runs a script to copy the GEM5 source code to a builds/output_dir_name folder
+    subprocess.call(['./parallel_helper_1.sh', output_dir_name, '&>>',
                     f'{LOGS_DIR}/{output_dir_name}.1.log'])
+    # Runs a script to compile the copied code, test with the benchmarks, and move the output to an output/output_dir_name folder
     pool.apply_async(subprocess.Popen, args=(
-        ['./script2.sh', output_dir_name, '&>>', f'{LOGS_DIR}/{output_dir_name}.2.log'], ))
+        ['./parallel_helper_2.sh', output_dir_name, '&>>', f'{LOGS_DIR}/{output_dir_name}.2.log'], ))
 
 
 def test_serial():
+    '''Test a single configuration using serial execution'''
     modify_file(BP_TYPE_PATH, partial(
         change_bp_type, name='LocalBP()'))
     modify_file(BP_PARAMS_PATH, partial(
@@ -99,6 +105,7 @@ def test_serial():
 
 
 def test_parallel():
+    '''Test a single configuration using parallel execution'''
     pool = mp.Pool()
 
     modify_file(BP_TYPE_PATH, partial(
@@ -179,10 +186,16 @@ def main_parallel():
 
 match(sys.argv[1]):
     case 'test-serial':
+        if len(sys.argv) < 3 or not str.isnumeric(sys.argv[2]):
+            sys.exit(
+                'Please enter the number of cores to use as a second argument.')
         test_serial()
     case 'test-parallel':
         test_parallel()
     case 'main-serial':
+        if len(sys.argv) < 3 or not str.isnumeric(sys.argv[2]):
+            sys.exit(
+                'Please enter the number of cores to use as a second argument.')
         main_serial()
     case 'main-parallel':
         main_parallel()

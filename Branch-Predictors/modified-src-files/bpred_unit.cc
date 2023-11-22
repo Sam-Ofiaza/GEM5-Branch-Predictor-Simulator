@@ -88,7 +88,7 @@ BPredUnit::BPredUnitStats::BPredUnitStats(statistics::Group *parent)
       ADD_STAT(BTBHitRatio, statistics::units::Ratio::get(), "BTB Hit Ratio",
                BTBHits / BTBLookups),
       ADD_STAT(BTBMissPct, statistics::units::Ratio::get(), "BTB Miss Pct",
-	       100.0 - BTBHitRatio),
+	       1.0 - BTBHitRatio),
       ADD_STAT(RASUsed, statistics::units::Count::get(),
                "Number of times the RAS was used to get a target."),
       ADD_STAT(RASIncorrect, statistics::units::Count::get(),
