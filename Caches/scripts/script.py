@@ -55,7 +55,7 @@ def build_benchmark_args(L1I_Size=params["L1I_Size"]["default"], L1D_Size=params
 
 
 # # Set the simulator branch predictor to NULL
-with open(f'{GEM5_DIR}/src/cpu/pred/BranchPredictor.py', 'r', encoding='utf-8') as file:
+with open(f'{GEM5_DIR}/src/cpu/simple/BaseSimpleCPU.py', 'r', encoding='utf-8') as file:
     data = file.readlines()
 
 data[40] = '    branchPred = Param.BranchPredictor(NULL, "Branch Predictor")'
