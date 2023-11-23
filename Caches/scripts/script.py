@@ -60,7 +60,7 @@ with open(f'{GEM5_DIR}/src/cpu/simple/BaseSimpleCPU.py', 'r', encoding='utf-8') 
 
 data[40] = '    branchPred = Param.BranchPredictor(NULL, "Branch Predictor")'
 
-with open(f'{GEM5_DIR}/src/cpu/pred/BranchPredictor.py', 'w', encoding='utf-8') as file:
+with open(f'{GEM5_DIR}/src/cpu/simple/BaseSimpleCPU.py', 'w', encoding='utf-8') as file:
     file.writelines(data)
 
 # # Compile if necessary
