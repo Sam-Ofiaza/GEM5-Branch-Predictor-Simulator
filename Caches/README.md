@@ -41,11 +41,11 @@ L2 Associativity - 1-8
 
 #### All configurations tested
 
-Due to the number of possible configuration combinations (8 \* 8 \* 8 \* 7 \* 8 \* 8 \* 8 = 1,835,008), the exploration is limited to testing each factor independent of the others, reducing the number of tests to 55 (8 + 8 + 8 + 7 + 8 + 8 + 8)
+Due to the number of possible configuration combinations (8 \* 8 \* 8 \* 7 \* 4 \* 4 \* 4 = 229,376), the exploration is limited to testing each factor independent of the others, reducing the number of tests to 43 (8 + 8 + 8 + 7 + 4 + 4 + 4)
 
 #### Total required recompilations = 1 if GEM5 is not already compiled, else 0
 
-#### Total required benchmark tests = 55 \* 2 = 110
+#### Total required benchmark tests = 43 \* 2 = 86
 
 #### Scripts' Expected Directory Structure:
 
