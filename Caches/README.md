@@ -33,7 +33,7 @@ python3 collect_complete_data.py
 All intermediate values are powers of 2 (e.g., 1, 2, 4, 8, etc.)\
 L1I Size - 1-128 KB\
 L1D Size - 1-128 KB\
-L2 Size - 1-128 KB\
+L2 Size - 1-128 MB\
 Cacheline - 8-512 bytes\
 L1I Associativity - 1-8\
 L1D Associativity - 1-8\

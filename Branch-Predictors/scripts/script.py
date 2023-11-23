@@ -79,17 +79,17 @@ def change_tourny_bp_config(data, btb_entries=None, local_pred_size=None, global
 
 
 def run_script_serial(output_dir_name):
-    '''Compiles one GEM5 configuration, test with the benchmarks, and moves the output to an output/output_dir_name folder'''
+    '''Compiles one GEM5 configuration, test with the benchmarks, and moves the output to a ../output-serial/output_dir_name folder'''
     subprocess.call(['./serial_helper.sh', output_dir_name, sys.argv[2], '&>>',
                     f'{LOGS_DIR}/{output_dir_name}.log'])
 
 
 def run_scripts_parallel(pool, output_dir_name):
     '''Two helper scripts are needed: the first ensures that modifying the GEM5 source dode and copying the GEM5 source code into a separate folder happen separately, the second is run asynchronously in a pool of threads managed by Python'''
-    # Runs a script to copy the GEM5 source code to a builds/output_dir_name folder
+    # Runs a script to copy the GEM5 source code to a ../builds/output_dir_name folder
     subprocess.call(['./parallel_helper_1.sh', output_dir_name, '&>>',
                     f'{LOGS_DIR}/{output_dir_name}.1.log'])
-    # Runs a script to compile the copied code, test with the benchmarks, and move the output to an output/output_dir_name folder
+    # Runs a script to compile the copied code, test with the benchmarks, and move the output to a ../output-parallel/output_dir_name folder
     pool.apply_async(subprocess.Popen, args=(
         ['./parallel_helper_2.sh', output_dir_name, '&>>', f'{LOGS_DIR}/{output_dir_name}.2.log'], ))
 
