@@ -1,4 +1,4 @@
-## Using GEM5 to simulate and compare 3 branch predictors with varying configuration sizes
+## Comparing the Performance of Local BPs, BiMode BPs, and Tournament BPs with Varying Configurations
 
 ### How to set up:
 
@@ -16,7 +16,7 @@
 
 ### How to run sequentially:
 
-- Navigate to the GEM5-Simulator directory
+- Navigate into GEM5-Simulator/Branch-Predictors/scripts
 - Run the following command:
 
 ```console
@@ -25,7 +25,7 @@ run.sh main-serial <number of cores to be used>
 
 ### How to run in parallel:
 
-- Navigate to the GEM5-Simulator directory
+- Navigate into GEM5-Simulator/Branch-Predictors/scripts
 - Run the following command:
 
 ```console
