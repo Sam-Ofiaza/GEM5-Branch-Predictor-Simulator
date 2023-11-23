@@ -26,7 +26,7 @@ params = {
     "Cacheline": {
         "units": "bytes",
         "range": (8, 512),
-        "default": 8
+        "default": 64
     },
     "L1I_Assoc": {
         "units": "",
@@ -55,20 +55,20 @@ def build_benchmark_args(L1I_Size=params["L1I_Size"]["default"], L1D_Size=params
 
 
 # # Set the simulator branch predictor to NULL
-# with open(f'{GEM5_DIR}/src/cpu/pred/BranchPredictor.py', 'r', encoding='utf-8') as file:
-#     data = file.readlines()
+with open(f'{GEM5_DIR}/src/cpu/pred/BranchPredictor.py', 'r', encoding='utf-8') as file:
+    data = file.readlines()
 
-# data[40] = '    branchPred = Param.BranchPredictor(NULL, "Branch Predictor")'
+data[40] = '    branchPred = Param.BranchPredictor(NULL, "Branch Predictor")'
 
-# with open(f'{GEM5_DIR}/src/cpu/pred/BranchPredictor.py', 'w', encoding='utf-8') as file:
-#     file.writelines(data)
+with open(f'{GEM5_DIR}/src/cpu/pred/BranchPredictor.py', 'w', encoding='utf-8') as file:
+    file.writelines(data)
 
 # # Compile if necessary
-# subprocess.call(['./compile.sh', sys.argv[1],
-#                 '&>>', f'{LOGS_DIR}/compile.log'])
+subprocess.call(['./compile.sh', sys.argv[1],
+                '&>>', f'{LOGS_DIR}/compile.log'])
 
 # Run the benchmarks for each configuration in parallel
-# pool = mp.Pool()
+pool = mp.Pool()
 
 for key, val in params.items():
     cur_val = val["range"][0]
@@ -79,13 +79,13 @@ for key, val in params.items():
 
         # print(f'{cur_params=}')
         # print(f'{output_dir_name=}')
-        print(f'{benchmark_args=}')
+        # print(f'{benchmark_args=}')
 
-        # pool.apply_async(subprocess.Popen, args=(
-        #     ['./run_benchmarks.sh', output_dir_name, benchmark_args, '&>>', f'{LOGS_DIR}/{output_dir_name}.log'], ))
+        pool.apply_async(subprocess.Popen, args=(
+            ['./run_benchmarks.sh', output_dir_name, benchmark_args, '&>>', f'{LOGS_DIR}/{output_dir_name}.log'], ))
 
         cur_val *= 2
     cur_params[key] = params[key]["default"]
 
-# pool.close()
-# pool.join()
+pool.close()
+pool.join()
