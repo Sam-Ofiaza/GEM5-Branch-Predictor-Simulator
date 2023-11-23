@@ -78,8 +78,8 @@ for key, val in params.items():
         benchmark_args = build_benchmark_args(**cur_params)
 
         # print(f'{cur_params=}')
-        print(f'{output_dir_name=}')
-        # print(f'{benchmark_args=}')
+        # print(f'{output_dir_name=}')
+        print(f'{benchmark_args=}')
 
         # pool.apply_async(subprocess.Popen, args=(
         #     ['./run_benchmarks.sh', output_dir_name, benchmark_args, '&>>', f'{LOGS_DIR}/{output_dir_name}.log'], ))
