@@ -87,7 +87,7 @@ for benchmark in ['hmmer', 'sjeng']:
                 case 'Tournament':
                     get_tournament_data(data, benchmark, x)
 
-df = pd.DataFrame(data, columns=['Benchmark', 'Branch Predictor', 'BTB Entries', 'Local Predictor Size',
+df = pd.DataFrame(data, columns=['Benchmark', 'Parameter', 'BTB Entries', 'Local Predictor Size',
                   'Global Predictor Size', 'Choice Predictor Size', 'BTB Miss %', 'Branch Misprediction %'])
 
 df.to_excel(OUTPUT_FILE)

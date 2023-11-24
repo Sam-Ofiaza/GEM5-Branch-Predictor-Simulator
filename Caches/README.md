@@ -16,7 +16,7 @@
 - Run the following command:
 
 ```console
-run.sh <number of cores to be used>
+./run.sh <number of cores to be used>
 ```
 
 ### How to collect the data into an excel file:
@@ -25,7 +25,7 @@ run.sh <number of cores to be used>
 - Run the following command:
 
 ```console
-python3 collect_complete_data.py
+python3 collect_data.py
 ```
 
 #### Range of configuration values:

@@ -20,7 +20,7 @@
 - Run the following command:
 
 ```console
-run.sh main-serial <number of cores to be used>
+./run.sh main-serial <number of cores to be used>
 ```
 
 ### How to run in parallel:
@@ -29,7 +29,7 @@ run.sh main-serial <number of cores to be used>
 - Run the following command:
 
 ```console
-run.sh main-parallel
+./run.sh main-parallel
 ```
 
 ### How to collect the data into an excel file:
