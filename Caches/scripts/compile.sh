@@ -9,7 +9,7 @@ start_time=`date +%s`
 cd $GEM5_DIR
 wait
 if ! [ -f build/X86/gem5.opt ]; then
-  scons build/X86/gem5.opt -j $1 &>> $CUR_DIR_FROM_GEM5/$LOGS_PATH/build.log
+  rm -rf build/X86; scons build/X86/gem5.opt -j $1 &>> $CUR_DIR_FROM_GEM5/$LOGS_PATH/build.log
 fi
 wait
 
