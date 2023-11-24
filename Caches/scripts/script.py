@@ -1,8 +1,6 @@
 import subprocess
 import sys
 import multiprocessing as mp
-import math
-import copy
 
 GEM5_DIR = '../../../gem5'
 LOGS_DIR = '../logs'
