@@ -49,10 +49,12 @@ for benchmark in ['hmmer', 'sjeng']:
         while cur_val <= val["range"][1]:
             stats_path = f'{OUTPUT_DIR}/{key}_{cur_val}{"_" if val["units"] else ""}{val["units"]}/{benchmark}/stats.txt'
             with open(stats_path, 'r', encoding='utf-8') as file:
-                l1i_miss_rate, l1d_miss_rate, l2_miss_rate, = -1, -1, -1
+                direct_cpi, l1i_miss_rate, l1d_miss_rate, l2_miss_rate, = -1, -1, -1, -1
 
                 for idx, line in enumerate(file):
-                    if 'system.cpu.dcache.overallMissRate::total' in line:
+                    if 'system.cpu.cpi' in line:
+                        direct_cpi = float(line.split()[1])
+                    elif 'system.cpu.dcache.overallMissRate::total' in line:
                         l1d_miss_rate = float(line.split()[1])
                     elif 'system.cpu.icache.overallMissRate::total' in line:
                         l1i_miss_rate = float(line.split()[1])
@@ -60,11 +62,13 @@ for benchmark in ['hmmer', 'sjeng']:
                         l2_miss_rate = float(line.split()[1])
                         break
 
+                calculated_cpi = 1 + l1i_miss_rate + l1d_miss_rate + l2_miss_rate
+
                 data.append(
-                    [benchmark, f'{key}_{cur_val}{"_" if val["units"] else ""}{val["units"]}', l1i_miss_rate, l1d_miss_rate, l2_miss_rate])
+                    [benchmark, f'{key}_{cur_val}{"_" if val["units"] else ""}{val["units"]}', l1i_miss_rate, l1d_miss_rate, l2_miss_rate, direct_cpi, calculated_cpi])
             cur_val *= 2
 
 df = pd.DataFrame(data, columns=[
-                  'Benchmark', 'Parameter', 'L1I Miss Rate', 'L1D Miss Rate', "L2 Miss Rate"])
+                  'Benchmark', 'Parameter', 'L1I Miss Rate', 'L1D Miss Rate', "L2 Miss Rate", "Direct CPI", "Calculated CPI"])
 
 df.to_excel(f'{OUTPUT_DIR}/{OUTPUT_FILE}')
