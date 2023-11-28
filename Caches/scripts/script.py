@@ -49,7 +49,7 @@ cpu_types = [
     {'param': 'AtomicSimpleCPU', 'name': 'Atomic'},
 ]
 
-cur_params = {}
+cur_params = {'Cpu_Type': 'BaseSimpleCPU'}
 for key, val in params.items():
     cur_params[key] = val["default"]
 
