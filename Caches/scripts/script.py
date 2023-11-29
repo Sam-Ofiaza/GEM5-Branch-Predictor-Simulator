@@ -44,7 +44,6 @@ params = {
 }
 
 cpu_types = [
-    {'param': 'BaseSimpleCPU', 'name': 'Base'},
     {'param': 'TimingSimpleCPU', 'name': 'Timing'},
     {'param': 'AtomicSimpleCPU', 'name': 'Atomic'},
 ]
@@ -54,7 +53,7 @@ for key, val in params.items():
     cur_params[key] = val["default"]
 
 
-def build_benchmark_args(Cpu_Type='BaseSimpleCPU', L1I_Size=params["L1I_Size"]["default"], L1D_Size=params["L1D_Size"]["default"], L2_Size=params["L2_Size"]["default"], Cacheline=params["Cacheline"]["default"], L1I_Assoc=params["L1I_Assoc"]["default"], L1D_Assoc=params["L1D_Assoc"]["default"], L2_Assoc=params["L2_Assoc"]["default"]):
+def build_benchmark_args(Cpu_Type='TimingSimpleCPU', L1I_Size=params["L1I_Size"]["default"], L1D_Size=params["L1D_Size"]["default"], L2_Size=params["L2_Size"]["default"], Cacheline=params["Cacheline"]["default"], L1I_Assoc=params["L1I_Assoc"]["default"], L1D_Assoc=params["L1D_Assoc"]["default"], L2_Assoc=params["L2_Assoc"]["default"]):
     return f'-I 50000000 --cpu-type={Cpu_Type} --caches --l2cache --l1d_size={L1D_Size}kB --l1i_size={L1I_Size}kB --l2_size={L2_Size}MB --l1d_assoc={L1D_Assoc} --l1i_assoc={L1I_Assoc} --l2_assoc={L2_Assoc} --cacheline_size={Cacheline}'
 
 

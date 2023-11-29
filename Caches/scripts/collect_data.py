@@ -43,13 +43,12 @@ params = {
 }
 
 cpu_types = [
-    {'param': 'BaseSimpleCPU', 'name': 'Base'},
     {'param': 'TimingSimpleCPU', 'name': 'Timing'},
     {'param': 'AtomicSimpleCPU', 'name': 'Atomic'},
 ]
 
 cost_config = {
-    'cpu_type': {'Base': 1, 'Timing': 1.5, 'Atomic': 1.5},
+    'Cpu_Type': {'Timing': 1.25, 'Atomic': 1},
     "L1I_Size": {
         'cost': lambda x: x,
         'weight': 3,
@@ -63,7 +62,7 @@ cost_config = {
         'weight': 1,
     },
     "Cacheline": {
-        'cost': lambda x: math.log2(x) - 2,
+        'cost': lambda x: 2 ** (math.log2(x) - 3),
         'weight': 2,
     },
     "L1I_Assoc": {
@@ -80,6 +79,45 @@ cost_config = {
     },
 }
 
+cost_info = []
+
+for cur_param, info in cost_config.items():
+    data = []
+    if cur_param == 'Cpu_Type':
+        for name, weight in cost_config[cur_param].items():
+            data.append([name, weight])
+        df = pd.DataFrame(data, columns=['CPU Type', 'Weight'])
+        df.name = 'CPU Type Weights'
+        cost_info.append(df)
+    else:
+        range = params[cur_param]['range']
+        cur_val, end = range
+        while cur_val <= end:
+            cur_cost = cost_config[cur_param]['cost'](cur_val)
+            weighted_cur_cost = cur_cost * cost_config[cur_param]['weight']
+            data.append(
+                [f'{cur_val}{" " if params[cur_param]["units"] else ""}{params[cur_param]["units"]}', cur_cost, weighted_cur_cost])
+            cur_val *= 2
+        df = pd.DataFrame(data, columns=['Value', 'Cost', 'Weighted Cost'])
+        df.name = f'{cur_param} Costs'
+        cost_info.append(df)
+
+startrow = 0
+with pd.ExcelWriter('../output/cost_info.xlsx') as writer:
+    for df in cost_info:
+        pd.Series(df.name).to_excel(writer, startrow=startrow,
+                                    startcol=0, index=False, header=False)
+        startrow += 1
+        if df.name != 'CPU Type Weights':
+            df.set_index('Value', inplace=True)
+            df = df.transpose()
+            df.to_excel(writer, engine='xlsxwriter',
+                        startrow=startrow,)
+        else:
+            df.to_excel(writer, engine='xlsxwriter',
+                        startrow=startrow, index=False)
+        startrow += (df.shape[0] + 2)
+
 data = []
 
 for benchmark in ['hmmer', 'sjeng']:
@@ -91,7 +129,7 @@ for benchmark in ['hmmer', 'sjeng']:
                 for key2, val2 in params.items():
                     cost += cost_config[key2]['cost'](
                         cur_val if key == key2 else params[key2]['default']) * cost_config[key2]['weight']
-                cost *= cost_config['cpu_type'][cpu_type['name']]
+                cost *= cost_config['Cpu_Type'][cpu_type['name']]
 
                 stats_path = f'{OUTPUT_DIR}/{cpu_type["name"]}_{key}_{cur_val}{"_" if val["units"] else ""}{val["units"]}/{benchmark}/stats.txt'
                 with open(stats_path, 'r', encoding='utf-8') as file:
@@ -121,10 +159,10 @@ for benchmark in ['hmmer', 'sjeng']:
                           (l2_miss_ticks / 1000)) / 50000000)
 
                     data.append(
-                        [benchmark, f'{key}_{cur_val}{"_" if val["units"] else ""}{val["units"]}', direct_cpi, miss_rate_cpi, miss_ticks_cpi, cost])
+                        [benchmark, cpu_type['name'], f'{key}_{cur_val}{"_" if val["units"] else ""}{val["units"]}', direct_cpi, miss_rate_cpi, miss_ticks_cpi, cost, cost / miss_ticks_cpi])
                 cur_val *= 2
 
 df = pd.DataFrame(data, columns=[
-                  'Benchmark', 'Parameter', "Direct CPI", "CPI using Miss Rate", "CPI using Miss Ticks", "Cost"])
+                  'Benchmark', 'CPU Type', 'Parameter', "Direct CPI", "CPI using Miss Rate", "CPI using Miss Ticks", "Cost", "Cost / CPI"])
 
 df.to_excel(f'{OUTPUT_DIR}/{OUTPUT_FILE}')
