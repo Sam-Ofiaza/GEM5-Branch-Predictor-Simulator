@@ -48,7 +48,7 @@ cpu_types = [
 ]
 
 cost_config = {
-    'Cpu_Type': {'Timing': 1.25, 'Atomic': 1},
+    'Cpu_Type': {'Timing': 1.5, 'Atomic': 1},
     "L1I_Size": {
         'cost': lambda x: x,
         'weight': 3,
@@ -135,6 +135,7 @@ for benchmark in ['hmmer', 'sjeng']:
                 with open(stats_path, 'r', encoding='utf-8') as file:
                     direct_cpi, l1i_miss_rate, l1d_miss_rate, l2_miss_rate = -1, -1, -1, -1
                     l1i_miss_ticks, l1d_miss_ticks, l2_miss_ticks = -1, -1, -1
+                    l1i_misses, l1d_misses, l2_misses = -1, -1, -1
 
                     for idx, line in enumerate(file):
                         if 'system.cpu.dcache.overallMissLatency::total' in line:
@@ -145,6 +146,12 @@ for benchmark in ['hmmer', 'sjeng']:
                             l2_miss_ticks = float(line.split()[1])
                         elif 'system.cpu.cpi' in line:
                             direct_cpi = float(line.split()[1])
+                        elif 'system.cpu.dcache.overallMisses::total' in line:
+                            l1d_misses = float(line.split()[1])
+                        elif 'system.cpu.icache.overallMisses::total' in line:
+                            l1i_misses = float(line.split()[1])
+                        elif 'system.l2.overallMisses::total' in line:
+                            l2_misses = float(line.split()[1])
                         elif 'system.cpu.dcache.overallMissRate::total' in line:
                             l1d_miss_rate = float(line.split()[1])
                         elif 'system.cpu.icache.overallMissRate::total' in line:
@@ -157,12 +164,17 @@ for benchmark in ['hmmer', 'sjeng']:
                     miss_ticks_cpi = 1 + \
                         (((l1i_miss_ticks / 1000) + (l1d_miss_ticks / 1000) +
                           (l2_miss_ticks / 1000)) / 50000000)
+                    misses_cpi = 1 + \
+                        ((l1i_misses + l1d_misses + l2_misses) / 50000000)
+                    miss_penalty_cpi = 1 + \
+                        ((l1i_misses + l1d_misses) *
+                         6 + l2_misses * 50) / 50000000
 
                     data.append(
-                        [benchmark, cpu_type['name'], f'{key}_{cur_val}{"_" if val["units"] else ""}{val["units"]}', direct_cpi, miss_rate_cpi, miss_ticks_cpi, cost, cost / miss_ticks_cpi])
+                        [benchmark, cpu_type['name'], f'{key}_{cur_val}{"_" if val["units"] else ""}{val["units"]}', miss_penalty_cpi, cost, cost / miss_penalty_cpi])
                 cur_val *= 2
 
 df = pd.DataFrame(data, columns=[
-                  'Benchmark', 'CPU Type', 'Parameter', "Direct CPI", "CPI using Miss Rate", "CPI using Miss Ticks", "Cost", "Cost / CPI"])
+                  'Benchmark', 'CPU Type', 'Parameter', 'CPI using Miss Penalties', 'Cost', 'Cost / CPI'])
 
 df.to_excel(f'{OUTPUT_DIR}/{OUTPUT_FILE}')
